@@ -1,0 +1,11 @@
+task = "Abrakadabra"
+# task = input()
+print(task[2])
+print(task[len(task)-2])
+print(task[:5])
+print(task[:-2])
+print(task[::2])
+print(task[1::2])
+print(task[::-1])
+print(task[::-2])
+print(len(task))
