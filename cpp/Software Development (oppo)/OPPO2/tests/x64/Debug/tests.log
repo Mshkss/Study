@@ -1,0 +1,8 @@
+﻿  pch.cpp
+  Color.cpp
+  tests.cpp
+D:\проекты VS\OPPO2\OPPO2\Point.h(5,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+D:\проекты VS\OPPO2\tests\tests.cpp(49,28): warning C4101: err: неиспользованная локальная переменная
+D:\проекты VS\OPPO2\tests\tests.cpp(80,27): warning C4101: err: неиспользованная локальная переменная
+  Создание кода...
+  tests.vcxproj -> D:\проекты VS\OPPO2\x64\Debug\tests.dll
