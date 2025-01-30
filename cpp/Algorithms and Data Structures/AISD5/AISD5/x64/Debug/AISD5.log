@@ -1,0 +1,3 @@
+﻿  AISD5.cpp
+D:\проекты VS\AISD5\AISD5\AISD5.cpp(38,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  AISD5.vcxproj -> D:\проекты VS\AISD5\x64\Debug\AISD5.exe
