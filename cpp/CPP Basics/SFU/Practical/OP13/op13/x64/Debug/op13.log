@@ -1,0 +1,3 @@
+﻿  op13.cpp
+D:\проекты VS\op13\op13\op13.cpp(17,12): warning C4244: инициализация: преобразование "size_t" в "float", возможна потеря данных
+  op13.vcxproj -> D:\проекты VS\op13\x64\Debug\op13.exe

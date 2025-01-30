@@ -1,0 +1,4 @@
+﻿  Prac17.cpp
+D:\проекты VS\Prac17\Prac17\Prac17.cpp(31,17): warning C4244: =: преобразование "time_t" в "long", возможна потеря данных
+D:\проекты VS\Prac17\Prac17\Prac17.cpp(29,9): warning C4101: i: неиспользованная локальная переменная
+  Prac17.vcxproj -> D:\проекты VS\Prac17\x64\Debug\Prac17.exe

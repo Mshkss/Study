@@ -1,0 +1,3 @@
+﻿  op10.cpp
+D:\проекты VS\op10\op10\op10.cpp(18): warning C4715: func: значение возвращается не при всех путях выполнения
+  op10.vcxproj -> D:\проекты VS\op10\x64\Debug\op10.exe

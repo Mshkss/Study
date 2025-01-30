@@ -1,0 +1,4 @@
+﻿  OP14.cpp
+D:\проекты VS\OP14\OP14\OP14.cpp(28,72): warning C4805: ==: небезопасное смешение типа "char" и типа "bool" в операции
+D:\проекты VS\OP14\OP14\OP14.cpp(47,72): warning C4805: ==: небезопасное смешение типа "char" и типа "bool" в операции
+  OP14.vcxproj -> D:\проекты VS\OP14\x64\Debug\OP14.exe
