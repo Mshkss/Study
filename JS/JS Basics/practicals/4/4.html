@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Drawing</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script>
+        // Данные о фигурах
+        const shapes = [
+            ["circle", 50, 50, 10],
+            ["rectangle", 100, 100, 50, 30],
+            ["line", 200, 200, 300, 300]
+        ];
+
+        // Получаем элемент canvas и контекст
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Функция для отрисовки фигур
+        function drawShapes(shapes) {
+            shapes.forEach(shape => {
+                switch (shape[0]) {
+                    case "circle":
+                        drawCircle(shape[1], shape[2], shape[3]);
+                        break;
+                    case "rectangle":
+                        drawRectangle(shape[1], shape[2], shape[3], shape[4]);
+                        break;
+                    case "line":
+                        drawLine(shape[1], shape[2], shape[3], shape[4]);
+                        break;
+                    default:
+                        console.log("Unknown shape type:", shape[0]);
+                }
+            });
+        }
+
+        // Функция для отрисовки круга
+        function drawCircle(x, y, radius) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        // Функция для отрисовки прямоугольника
+        function drawRectangle(x, y, width, height) {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(x, y, width, height);
+        }
+
+        // Функция для отрисовки линии
+        function drawLine(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = 'red';
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        // Вызов функции для отрисовки фигур
+        drawShapes(shapes);
+    </script>
+</body>
+</html>
