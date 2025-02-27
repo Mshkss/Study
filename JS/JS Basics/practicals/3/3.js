@@ -12,4 +12,15 @@ sum+=arr[i].count * arr[i].price;
 }
 
 
-console.log("price = ", sum)
+console.log("price= ", sum)
+
+
+const bill = [
+  { name: "apple", count: 5, price: 70 },
+  { name: "orange", count: 10, price: 90 }
+];
+
+const result = 12345;
+
+console.log(JSON.stringify(bill));
+console.log(JSON.stringify(result));
