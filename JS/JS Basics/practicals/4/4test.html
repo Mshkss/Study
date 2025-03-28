@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Canvas Shapes & Анимация</title>
+	<style>
+		canvas {
+			border: 1px solid #ccc;
+			background-color: #f9f9f9;
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+	<script>
+		// Классы фигур
+		class Circle {
+			constructor(x, y, radius) {
+				this.x = x;
+				this.y = y;
+				this.radius = radius;
+				this.color = 'red';
+			}
+			draw(ctx) {
+				ctx.beginPath();
+				ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+				ctx.fillStyle = this.color;
+				ctx.fill();
+				ctx.closePath();
+			}
+		}
+
+		class Square {
+			constructor(x, y, side) {
+				this.x = x;
+				this.y = y;
+				this.side = side;
+				this.color = 'green';
+			}
+			draw(ctx) {
+				ctx.fillStyle = this.color;
+				ctx.fillRect(this.x, this.y, this.side, this.side);
+			}
+		}
+
+		class Ellipse {
+			constructor(x, y, radiusX, radiusY) {
+				this.x = x;
+				this.y = y;
+				this.radiusX = radiusX;
+				this.radiusY = radiusY;
+				this.color = 'blue';
+			}
+			draw(ctx) {
+				ctx.beginPath();
+				ctx.ellipse(this.x, this.y, this.radiusX, this.radiusY, 0, 0, Math.PI * 2);
+				ctx.fillStyle = this.color;
+				ctx.fill();
+				ctx.closePath();
+			}
+		}
+
+		class BezierCurve {
+			constructor(startX, startY, cp1X, cp1Y, cp2X, cp2Y, endX, endY) {
+				this.startX = startX;
+				this.startY = startY;
+				this.cp1X = cp1X;
+				this.cp1Y = cp1Y;
+				this.cp2X = cp2X;
+				this.cp2Y = cp2Y;
+				this.endX = endX;
+				this.endY = endY;
+				this.color = 'purple';
+			}
+			draw(ctx) {
+				ctx.beginPath();
+				ctx.moveTo(this.startX, this.startY);
+				ctx.bezierCurveTo(this.cp1X, this.cp1Y, this.cp2X, this.cp2Y, this.endX, this.endY);
+				ctx.strokeStyle = this.color;
+				ctx.lineWidth = 2;
+				ctx.stroke();
+				ctx.closePath();
+			}
+		}
+
+		// Массив с данными фигур
+		const shapesData = [
+			["circle", 50, 50, 10],
+			["square", 150, 50, 25],
+			["ellipse", 200, 200, 30, 40]
+		];
+
+		const shapes = [];
+
+		// Создание объектов фигур на основе данных
+		shapesData.forEach(item => {
+			const type = item[0];
+			if (type === "circle") {
+				shapes.push(new Circle(item[1], item[2], item[3]));
+			} else if (type === "square") {
+				shapes.push(new Square(item[1], item[2], item[3]));
+			} else if (type === "ellipse") {
+				shapes.push(new Ellipse(item[1], item[2], item[3], item[4]));
+			}
+		});
+		// Добавляем объект кривой Безье для демонстрации (координаты задаются вручную)
+		shapes.push(new BezierCurve(10, 300, 150, 250, 250, 350, 390, 300));
+
+		// Получение контекста canvas
+		const canvas = document.getElementById('canvas');
+		const ctx = canvas.getContext('2d');
+
+		let angle = 0; // параметр для анимации
+
+		// Функция анимации
+		function animate() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			// Пример анимации: движение круга по горизонтали с колебанием
+			shapes.forEach(shape => {
+				if (shape instanceof Circle) {
+					shape.x = 50 + Math.cos(angle) * 20;
+				}
+				shape.draw(ctx);
+			});
+
+			angle += 0.02;
+			requestAnimationFrame(animate);
+		}
+		animate();
+
+		// Обработка клика: если клик внутри фигуры, изменяем её цвет на случайный
+		canvas.addEventListener('click', function (event) {
+			const rect = canvas.getBoundingClientRect();
+			const mouseX = event.clientX - rect.left;
+			const mouseY = event.clientY - rect.top;
+
+			shapes.forEach(shape => {
+				if (shape instanceof Circle) {
+					const dx = mouseX - shape.x;
+					const dy = mouseY - shape.y;
+					if (Math.sqrt(dx * dx + dy * dy) < shape.radius) {
+						shape.color = getRandomColor();
+					}
+				} else if (shape instanceof Square) {
+					if (mouseX >= shape.x && mouseX <= shape.x + shape.side &&
+						mouseY >= shape.y && mouseY <= shape.y + shape.side) {
+						shape.color = getRandomColor();
+					}
+				} else if (shape instanceof Ellipse) {
+					// Простейшая проверка попадания в эллипс
+					const normX = (mouseX - shape.x) / shape.radiusX;
+					const normY = (mouseY - shape.y) / shape.radiusY;
+					if (normX * normX + normY * normY <= 1) {
+						shape.color = getRandomColor();
+					}
+				}
+				// Для кривой Безье можно добавить логику по проверке попадания к точкам управления
+			});
+		});
+
+		// Функция для генерации случайного цвета
+		function getRandomColor() {
+			const letters = '0123456789ABCDEF';
+			let color = '#';
+			for (let i = 0; i < 6; i++) {
+				color += letters[Math.floor(Math.random() * 16)];
+			}
+			return color;
+		}
+	</script>
+</body>
+
+</html>
