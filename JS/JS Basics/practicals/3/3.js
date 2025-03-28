@@ -36,3 +36,5 @@ document.getElementById("colorButton").addEventListener("click", function () {
     element.style.color = "red";
   });
 });
+
+document.getElementById("textInput").addEventListener;
