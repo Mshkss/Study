@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "scripts": {
+    "start": "node task7.js",
+    "dev": "nodemon task7.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
