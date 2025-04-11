@@ -5,10 +5,6 @@ const url = require("url"); // Подключаем модуль url
 
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-
-  // Устанавливаем заголовки по умолчанию
-  //res.writeHead(200, { "Content-Type": "text/plain" });
-
   // Обработка разных URL
   if (parsedUrl.pathname === "/") {
     // Главная страница с текстом
@@ -47,8 +43,18 @@ const server = http.createServer((req, res) => {
         res.end(data); // Отправляем изображение
       }
     });
+  } else if (parsedUrl.pathname === "/login") {
+    const loginPagePath = path.join(__dirname, "auth.html");
+    fs.readFile(loginPagePath, (err, data) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Error loading login page.");
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    });
   } else if (parsedUrl.pathname === "/json") {
-    // Выдача данных в формате JSON
     const jsonData = {
       message: "This is a JSON response",
       success: true,
@@ -59,8 +65,42 @@ const server = http.createServer((req, res) => {
     };
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(jsonData)); // Отправляем JSON
+  } else if (parsedUrl.pathname === "/auth") {
+    const username = parsedUrl.query.username;
+    const password = parsedUrl.query.password;
+
+    if (!username || !password) {
+      res.writeHead(400, { "Content-Type": "text/plain" });
+      res.end("Missing username or password");
+      return;
+    }
+
+    // Считываем users.json
+    const usersPath = path.join(__dirname, "users.json");
+    fs.readFile(usersPath, "utf8", (err, data) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Error reading users file");
+        return;
+      }
+
+      const users = JSON.parse(data);
+      if (users[username] && users[username] === password) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({ success: true, message: "Авторизация успешна!" })
+        );
+      } else {
+        res.writeHead(401, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            success: false,
+            message: "Неверный логин или пароль",
+          })
+        );
+      }
+    });
   } else {
-    // Страница ошибки для несуществующих путей
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("404 Not Found\n");
   }
