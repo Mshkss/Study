@@ -9,7 +9,7 @@ app.engine("mustache", mustacheExpress());
 app.set("view engine", "mustache");
 app.set("views", __dirname + "/views");
 //
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); // типо боди парсер
 
 const homeData = require("./data/home.json");
 app.get("/", (req, res) => {
