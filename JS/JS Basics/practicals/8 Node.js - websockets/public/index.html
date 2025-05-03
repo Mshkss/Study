@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO Chat</title>
+  </head>
+
+  <body>
+    <h1>Редактор</h1>
+    <textarea id="editor" rows="10" cols="50"></textarea>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const editor = document.getElementById("editor");
+
+      let isRemoteUpdate = false;
+
+      socket.on("init", (text) => {
+        editor.value = text;
+      });
+
+      socket.on("update-text", (text) => {
+        isRemoteUpdate = true;
+        editor.value = text;
+      });
+      editor.addEventListener("input", () => {
+        if (isRemoteUpdate) {
+          isRemoteUpdate = false;
+          return; // не пересылать, если пришло от сервера
+        }
+        socket.emit("text-change", editor.value);
+      });
+    </script>
+  </body>
+</html>
