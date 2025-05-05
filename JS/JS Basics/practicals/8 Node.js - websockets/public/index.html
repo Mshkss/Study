@@ -1,35 +1,91 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Socket.IO Chat</title>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title> Совместный редактор</title>
+  <style>
+    #editor { border: 1px solid #ccc; padding: 10px; min-height: 200px; }
+  </style>
+</head>
+<body>
+  <h1>Совместный редактор</h1>
+  <div id="editor" contenteditable="true"></div>
 
-  <body>
-    <h1>Редактор</h1>
-    <textarea id="editor" rows="10" cols="50"></textarea>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io();
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const editor = document.getElementById('editor');
+    let myColor = null;
 
-      const editor = document.getElementById("editor");
+    socket.on('set-color', color => { myColor = color; });
 
-      let isRemoteUpdate = false;
-
-      socket.on("init", (text) => {
-        editor.value = text;
+    // Рендерим фрагменты
+    socket.on('init', fragments => {
+      editor.innerHTML = '';
+      fragments.forEach(f => {
+        const span = document.createElement('span');
+        span.textContent = f.text;
+        if (f.color) span.style.color = f.color;
+        editor.appendChild(span);
       });
+      placeCaretAtEnd(editor);
+    });
 
-      socket.on("update-text", (text) => {
-        isRemoteUpdate = true;
-        editor.value = text;
-      });
-      editor.addEventListener("input", () => {
-        if (isRemoteUpdate) {
-          isRemoteUpdate = false;
-          return; // не пересылать, если пришло от сервера
+    editor.addEventListener('beforeinput', evt => {
+      const sel = window.getSelection();
+      if (!sel.rangeCount) return;
+      const range = sel.getRangeAt(0);
+
+      // Вычисляем позиции начала и конца диапазона в символах
+      const preStart = range.cloneRange();
+      preStart.selectNodeContents(editor);
+      preStart.setEnd(range.startContainer, range.startOffset);
+      const posStart = preStart.toString().length;
+
+      const preEnd = range.cloneRange();
+      preEnd.selectNodeContents(editor);
+      preEnd.setEnd(range.endContainer, range.endOffset);
+      const posEnd = preEnd.toString().length;
+
+      const selLength = posEnd - posStart;
+      let from, removedLength;
+
+      if (evt.inputType === 'deleteContentBackward') {
+        if (selLength > 0) {
+          from = posStart;
+          removedLength = selLength;
+        } else {
+          from = posEnd - 1;
+          removedLength = 1;
         }
-        socket.emit("text-change", editor.value);
-      });
-    </script>
-  </body>
+      } else if (evt.inputType === 'deleteContentForward') {
+        if (selLength > 0) {
+          from = posStart;
+          removedLength = selLength;
+        } else {
+          from = posEnd;
+          removedLength = 1;
+        }
+      } else {
+        // insertText и другие вставки
+        from = posStart;
+        removedLength = selLength;
+      }
+
+      const inserted = (evt.inputType === 'insertText') ? evt.data : '';
+      const delta = { from, removedLength, inserted, color: myColor };
+      socket.emit('text-delta', delta);
+      evt.preventDefault();
+    });
+
+    function placeCaretAtEnd(el) {
+      el.focus();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+    }
+  </script>
+</body>
 </html>
