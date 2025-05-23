@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Доска объявлений</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    form { margin-bottom: 20px; }
+    input[type=text] { padding: 5px; width: 300px; }
+    button { padding: 5px 10px; }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 10px; }
+    .ad { display: flex; justify-content: space-between; max-width: 600px; }
+  </style>
+</head>
+<body>
+  <h1>Доска объявлений</h1>
+
+  <form method="GET" action="/">
+    <input type="text" name="search" placeholder="Поиск..." value="<%= search %>" />
+    <button type="submit">Найти</button>
+    <a href="/">Сбросить</a>
+  </form>
+
+  <form method="POST" action="/add">
+    <input type="text" name="text" placeholder="Новое объявление" required />
+    <button type="submit">Добавить</button>
+  </form>
+
+  <ul>
+    <% if (ads.length === 0) { %>
+      <li>Объявлений нет.</li>
+    <% } else { %>
+      <% ads.forEach(ad => { %>
+        <li class="ad">
+          <span><%= ad.text %></span>
+          <form method="POST" action="/delete/<%= ad._id %>" style="margin:0;">
+            <button type="submit">Удалить</button>
+          </form>
+        </li>
+      <% }) %>
+    <% } %>
+  </ul>
+</body>
+</html>
