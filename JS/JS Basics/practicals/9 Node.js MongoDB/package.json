@@ -1,7 +1,7 @@
 {
   "name": "myapp",
   "version": "1.0.0",
-  "main": "task8.js",
+  "main": "task9.js",
   "type": "module",
   "scripts": {
     "start": "node task9.js",

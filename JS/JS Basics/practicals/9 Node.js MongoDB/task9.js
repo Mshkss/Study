@@ -20,12 +20,11 @@ app.set("views", path.join(__dirname, "views"));
 
 async function main() {
   await client.connect();
-  console.log("✅ Connected to MongoDB");
+  console.log("Connected to MongoDB");
 
   const db = client.db(dbName);
   const adsCollection = db.collection("ads");
 
-  // Главная страница — список объявлений с поиском
   app.get("/", async (req, res) => {
     const search = req.query.search || "";
     const query = search ? { text: { $regex: search, $options: "i" } } : {};
@@ -33,7 +32,6 @@ async function main() {
     res.render("index", { ads, search });
   });
 
-  // Добавление объявления (форма и обработка)
   app.post("/add", async (req, res) => {
     const text = req.body.text?.trim();
     if (text) {
@@ -42,7 +40,6 @@ async function main() {
     res.redirect("/");
   });
 
-  // Удаление объявления
   app.post("/delete/:id", async (req, res) => {
     const id = req.params.id;
     if (ObjectId.isValid(id)) {
@@ -52,7 +49,7 @@ async function main() {
   });
 
   app.listen(PORT, () => {
-    console.log(`🚀 Server is running at http://localhost:${PORT}`);
+    console.log(`Server is running at http://localhost:${PORT}`);
   });
 }
 
