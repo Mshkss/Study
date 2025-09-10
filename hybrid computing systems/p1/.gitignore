@@ -192,3 +192,4 @@ data/
 
 # Reports
 reports_html/
+.DS_Store
